@@ -19,6 +19,9 @@
   "bugs": {
     "url": "https://github.com/Bhautik-78/product_backend/issues"
   },
+  "engines": {
+    "node": "16.14.0"
+  },
   "homepage": "https://github.com/Bhautik-78/product_backend#readme",
   "dependencies": {
     "body-parser": "^1.20.1",
