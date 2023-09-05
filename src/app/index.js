@@ -9,6 +9,8 @@ const blogRouter = require("./blog/router");
 const emailRouter = require("./email/router");
 const inquiryRouter = require("./landingPageInquiry/router");
 
+const printArtUserRouter = require("./printArtsUser/router");
+
 module.exports = (app) => {
     app.use("/api/order", orderRouter);
     app.use("/api/category", categoryRouter);
@@ -20,4 +22,6 @@ module.exports = (app) => {
     app.use("/api/post", postRouter);
     app.use("/api/email", emailRouter);
     app.use("/api/inquiry", inquiryRouter);
+
+    app.use("/api/PrintArt/user", printArtUserRouter);
 };
