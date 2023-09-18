@@ -14,10 +14,10 @@ exports.getCategoryWithSubCategory = async (req, res) => {
         let query = {};
         const application = await Category.find(query).lean();
         for (const object of application) {
-            object.subCategory = await subCategory.find({categoryId: object._id})
+            object.subCategory = await subCategory.find({categoryId: object._id}).sort({length: -1}).limit("5")
         }
-        const pageData = page ? application?.slice(startIndex, endIndex) : application
-        res.status(200).send({data: pageData, success: true})
+        const pageData = page ? application?.slice(startIndex, endIndex) : application;
+        res.status(200).send({data: pageData, success: true, totalRecord: application?.length})
     } catch (err) {
         res.status(500).send({message: err.message || "data does not exist", success: false});
     }

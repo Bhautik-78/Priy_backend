@@ -36,8 +36,13 @@ exports.createSubCategory = async (req, res) => {
 exports.getAllSubCategory = async (req, res) => {
     try {
         let query = {};
+        const page = req.body.page;
+        const limit = req.body.limit;
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
         const application = await subCategory.find(query);
-        res.status(200).send({ application, success: true })
+        const pageData = page ? application?.slice(startIndex, endIndex) : application;
+        res.status(200).send({ data: pageData, success: true, totalRecord: application?.length })
     } catch (err) {
         res.status(500).send({ message: err.message || "data does not exist", success: false });
     }
@@ -49,15 +54,20 @@ exports.getSubCategory = async (req, res) => {
             categoryId: req.params.id,
             active: true
         };
+        const page = req.body.page;
+        const limit = req.body.limit;
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
         const application = await subCategory.find(query).lean();
         application.forEach(item => {
             const src = "." + item.subCategoryImage;
-            const isExist = Fs.existsSync(src)
+            const isExist = Fs.existsSync(src);
             if (!isExist) {
                 item.subCategoryImage = null
             }
         });
-        res.status(200).send({application, success: true})
+        const pageData = page ? application?.slice(startIndex, endIndex) : application;
+        res.status(200).send({data: pageData, success: true, totalRecord: application?.length})
     } catch (err) {
         res.status(500).send({ message: err.message || "data does not exist", success: false });
     }
