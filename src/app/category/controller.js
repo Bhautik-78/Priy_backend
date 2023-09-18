@@ -1,8 +1,27 @@
 const mongoose = require("mongoose");
-const Fs = require('fs')
+const Fs = require('fs');
 const path = require('path');
 const Category = mongoose.model("category");
+const subCategory = require('../subCategory/model');
 require('dotenv').config();
+
+exports.getCategoryWithSubCategory = async (req, res) => {
+    try {
+        const page = req.body.page;
+        const limit = req.body.limit;
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        let query = {};
+        const application = await Category.find(query).lean();
+        for (const object of application) {
+            object.subCategory = await subCategory.find({categoryId: object._id})
+        }
+        const pageData = page ? application?.slice(startIndex, endIndex) : application
+        res.status(200).send({data: pageData, success: true})
+    } catch (err) {
+        res.status(500).send({message: err.message || "data does not exist", success: false});
+    }
+};
 
 exports.createCategory = async (req, res) => {
     try {
